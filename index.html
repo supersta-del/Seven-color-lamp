@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seven-color lamp</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;  
+            align-items: center;
+            height: 100vh;
+            background-color: #000;
+            margin: 0;
+        }    /*  背景颜色为黑色  */
+
+        .neon-container {
+            position: relative;
+            width: 600px;
+            height: 600px;
+            display: flex;     /*  设置  flex布局  */
+            flex-wrap: wrap;
+            justify-content: space-around;  /*  水平居中  */
+            align-items: center;   /*   垂直居中   */
+        }    /*   总的div块用来  设置  七个灯的排序  */
+
+        .light {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #fff;
+            animation: neonPulse 1s infinite alternate;  /*闪烁画面  */
+        }
+
+        @keyframes neonPulse {
+            from {
+                box-shadow: 0 0 10px rgba(255, 255, 255, 1);
+            }
+            to {
+                box-shadow: 0 0 50px rgba(255, 255, 255, 1);
+            }
+        }
+
+        button {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #2196F3;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #1e88e5;
+        }
+
+        #stop-button {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="neon-container">
+        <div class="light"></div>
+        <div class="light"></div>
+        <div class="light"></div>
+        <div class="light"></div>
+        <div class="light"></div>
+        <div class="light"></div>
+        <div class="light"></div>
+    </div>
+    <button id="start-button">启动</button>
+    <button id="stop-button">停止</button>
+
+    <script>
+        const lights = document.querySelectorAll('.light');   /*获取灯的元素  */
+        const startButton = document.getElementById('start-button');
+        const stopButton = document.getElementById('stop-button');
+
+        let intervalId;
+
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }  /*   随机生成颜色     floor 取整   random 随机数   */
+            return color;
+        }
+
+        function changeColors() {
+            lights.forEach(light => {
+                light.style.backgroundColor = getRandomColor();
+            });
+        }
+
+        function startAnimation() {
+            changeColors(); // 初始颜色变化
+            intervalId = setInterval(changeColors, 2000); // 每秒变化一次颜色
+            startButton.style.display = 'none';
+            stopButton.style.display = 'block';
+        }
+
+        function stopAnimation() {
+            clearInterval(intervalId);
+            startButton.style.display = 'block';
+            stopButton.style.display = 'none';
+        }
+
+        startButton.addEventListener('click', startAnimation);
+        stopButton.addEventListener('click', stopAnimation);
+    </script>
+</body>
+</html>
